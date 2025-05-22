@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="one.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Weather App</h1>
+        </header>
+
+        <main class="main-content">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Enter city name...">
+                    <button class="search-btn">Search</button>
+                </div>
+            </section>
+
+            <!-- Current Weather Display -->
+            <section class="current-weather">
+                <div class="weather-card">
+                    <div class="location">
+                        <h2 class="location1">DELHI</h2>
+                        <p class="date"></p>
+                    </div>
+                    
+                    <div class="weather-main">
+                        <div class="temperature">
+                            <span class="temp-value">33.05</span>
+                            <span class="temp-unit">°C</span>
+                        </div>
+                        <div class="weather-icon">
+                            <img src="/api/placeholder/80/80" alt="Weather Icon">
+                        </div>
+                    </div>
+                    
+                    <div class="weather-description">
+                        <p>Partly Cloudy</p>
+                    </div>
+                    
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Feels like</span>
+                            <span class="detail-value1">35.29°C</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Humidity</span>
+                            <span class="detail-value2">46%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Wind</span>
+                            <span class="detail-value3">5.66 km/h</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Pressure</span>
+                            <span class="detail-value4">997 hPa</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Weather App. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+<script>
+  
+    let tempvalue=document.querySelector('.temp-value');
+    let location1=document.querySelector('.location1');
+    let searchbtn =document.querySelector('.search-btn');
+    let detaillabel=document.querySelector('.detail-value1');
+    let detaillabe2=document.querySelector('.detail-value2');
+    let detaillabe3=document.querySelector('.detail-value3');
+    let detaillabe4=document.querySelector('.detail-value4');
+    let date=document.querySelector('.date');
+    date.textContent=  `${new Date().toLocaleString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true 
+})}`
+
+    searchbtn.addEventListener('click',()=>{
+          let cityname=document.querySelector('.search-input').value.trim();
+          if (cityname === "") {
+    alert("Please enter a city name");
+    return;
+      }
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=174f8fee34eb96ce62a977e0dcf4b5ec&units=metric`)
+            .then((response)=>{
+                if(!response.ok){
+                       throw new Error("City not found");
+                        
+                }
+                
+                return  response.json();
+})
+.then((data)=>{
+      tempvalue.textContent=`${(data.main.temp)}`;
+   location1.textContent = `${cityname.toUpperCase()}`;
+   detaillabel.textContent=`${data.main.feels_like}°C`;
+   detaillabe2.textContent=`${data.main.humidity}%`;
+   detaillabe3.textContent=`${data.wind.speed} km/h`;
+   detaillabe4.textContent=`${data.main.pressure} hPa`;
+   date.textContent = `${new Date().toLocaleString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true 
+})}`;
+})
+.catch((error)=>{
+alert("City not found. Please check the city name and try again.");
+    console.log(error);
+})})
+</script>
+</html>
